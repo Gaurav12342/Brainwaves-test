@@ -22,6 +22,8 @@ const MasterForm = (props: any) => {
     selectedMaster,
     setTableList1,
   } = props;
+
+  // manage the state for address tab and profile tab form data
   const [selectedTab, setSelectedTab] = React.useState(0);
   const [selectedGender, setSelectedGender] = useState("");
   const [selectedBirthDate, setSelectedBirthDate] =

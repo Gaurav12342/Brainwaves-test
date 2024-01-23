@@ -2,23 +2,15 @@ import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { TreeView } from "@mui/x-tree-view/TreeView";
-import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import {
   FormControl,
-  InputLabel,
   MenuItem,
-  OutlinedInput,
   Select,
-  SelectChangeEvent,
 } from "@mui/material";
-import { Theme, useTheme } from "@emotion/react";
+import ReplySharpIcon from '@mui/icons-material/ReplySharp';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -32,7 +24,7 @@ const MenuProps = {
 };
 
 const Header = (props: any) => {
-  const {handleChangeMaterList,masterList, selectedMasterList} = props;
+  const {handleChangeMaterList,masterDropDownList, selectedMasterList, setIsMasterDropDownList} = props;
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -59,13 +51,15 @@ const Header = (props: any) => {
               MenuProps={MenuProps}
               sx={{ background: "#ffffff", color: "#000000" }}
             >
-              {masterList.map((data:any,index:any) => (
+              {masterDropDownList.map((data:any,index:any) => (
                 <MenuItem key={index} value={data?.value}>
                   {data?.label}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
+
+          <Button color="inherit" onClick={()=>{setIsMasterDropDownList(true)}}><ReplySharpIcon/> &nbsp; Add Master</Button>
         </Toolbar>
       </AppBar>
     </Box>

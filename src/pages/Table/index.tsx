@@ -3,7 +3,6 @@ import {
   GridOverlay,
   GridToolbarContainer,
   GridToolbarFilterButton,
-  GridToolbarDensitySelector,
   GridToolbarColumnsButton,
 } from "@mui/x-data-grid-pro";
 import { Button, Typography } from "@mui/material";
@@ -35,7 +34,7 @@ const MasterTable = (props: any) => {
 
   const [manageTemplate, setManageTemplate] = useState<any>([]);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
-  const [columnOrder, setColumnOrder] = useState([]);
+ 
 
   const CustomNoRowsOverlay: any = () => {
     return (
@@ -81,10 +80,6 @@ const MasterTable = (props: any) => {
       selectedTransaction: selectedMaster,
       masterList: result,
     });
-  };
-
-  const handleColumnModelChange = (newModel: any) => {
-    // setColumnOrder(newModel.map((col:any) => col.field));
   };
 
   const handlePinnedColumnChange = (newData: any) => {
@@ -151,7 +146,6 @@ const MasterTable = (props: any) => {
             pinnedColumns: gridTemplate?.pinnedColumns,
           }}
           onPinnedColumnsChange={handlePinnedColumnChange}
-          onColumnOrderChange={handleColumnModelChange}
           {...gridTemplate}
         />
       </div>

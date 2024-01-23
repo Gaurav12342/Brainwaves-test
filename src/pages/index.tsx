@@ -4,15 +4,18 @@ import Header from "./Header";
 import MasterForm from "./Form";
 import { Chip, SelectChangeEvent } from "@mui/material";
 import NotFound from "./NotFound";
+import MaterDropdownModal from "../Components/MaterDropdownModal";
 
 const Root = () => {
   const [isMastarForm, setIsMasterForm] = useState(false);
-  const [masterList, setMasterList] = useState<string[]>([]);
+  const [masterDropDownList, setMasterDropDownList] = useState<string[]>([]);
   const [selectedMasterList, setSelectedMasterList] = useState<string[]>([]);
   const [selectedMaster, setSelectedMaster] = useState<any>({});
   const [selectedTableData, setSelectedTableData] = useState<any>({});
   const [tableList1, setTableList1] = useState<any>({});
-
+  const [isMasterDropDownList, setIsMasterDropDownList] = useState(false);
+  const [masterDropDownValue, setMasterDropDownValue] = useState("");
+  
   useEffect(() => {
     const names: any = [
       { label: "Company Master", value: "company_master" },
@@ -20,7 +23,7 @@ const Root = () => {
       { label: "Employee Master", value: "employee_master" },
     ];
 
-    setMasterList(names);
+    setMasterDropDownList(names);
   }, []);
 
   const handleChangeMaterList = (
@@ -41,13 +44,25 @@ const Root = () => {
     setIsMasterForm(false);
     setSelectedTableData({});
   };
+
+  const handleSaveMasterDropDownValue = ()=>{
+    const newArray:any = [...masterDropDownList];
+    newArray.push({
+      label: masterDropDownValue, value: masterDropDownValue?.replace(/\s/g, '_').toLowerCase()
+    });
+    setMasterDropDownList(newArray);
+    setIsMasterDropDownList(false);
+  }
+
   return (
     <div>
       <div>
         <Header
           handleChangeMaterList={handleChangeMaterList}
-          masterList={masterList}
+          masterDropDownList={masterDropDownList}
           selectedMasterList={selectedMasterList}
+          setIsMasterDropDownList={setIsMasterDropDownList}
+          isMasterDropDownList={isMasterDropDownList}
         />
       </div>
       <div style={{ margin: "20px 0 0 20px" }}>
@@ -112,6 +127,9 @@ const Root = () => {
           selectedMaster={selectedMaster}
         />
       )}
+
+      {isMasterDropDownList && <MaterDropdownModal masterDropDownValue={masterDropDownValue} setMasterDropDownValue={setMasterDropDownValue} setIsMasterDropDownList={setIsMasterDropDownList}
+          isMasterDropDownList={isMasterDropDownList} handleSaveMasterDropDownValue={handleSaveMasterDropDownValue}/>}
     </div>
   );
 };

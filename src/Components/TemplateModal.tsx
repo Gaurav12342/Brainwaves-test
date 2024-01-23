@@ -13,7 +13,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 
 const SaveTemplateModal = ({
   onSave,
@@ -23,6 +23,8 @@ const SaveTemplateModal = ({
   manageTemplate,
   handleApplyDefaultTemplate
 }: any) => {
+
+  // manage the template data
   const [templateName, setTemplateName] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState("");
 
