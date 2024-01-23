@@ -8,12 +8,14 @@ import { Chip, SelectChangeEvent } from "@mui/material";
 
 const Root = () => {
   const [isMastarForm, setIsMasterForm] = useState(false);
-  const [masterList, setMasterList] = React.useState<string[]>([]);
-  const [selectedMasterList, setSelectedMasterList] = React.useState<string[]>(
+  const [masterList, setMasterList] = useState<string[]>([]);
+  const [selectedMasterList, setSelectedMasterList] = useState<string[]>(
     []
   );
   const [masterChips,setMasterChips] = useState<any>([]);
   const [tableList,setTableList] = useState<any>([]);
+  const [selectedTableData,setSelectedTableData] = useState<any>({});
+  console.log("🚀 ~ Root ~ selectedMasterList:", selectedMasterList)
   
   useEffect(() => {
     const names: any = [
@@ -42,10 +44,12 @@ const Root = () => {
 
  const handleModalOpen = () => {
     setIsMasterForm(true);
+    setSelectedTableData({});
   };
 
   const handleModalClose = () => {
     setIsMasterForm(false);
+    setSelectedTableData({});
   };
   return (
     <div>
@@ -58,14 +62,16 @@ const Root = () => {
       </div>
       <div style={{ margin: "20px 0 0 20px" }}>
         {masterChips?.map((data: any) => {
-          const displayName = data?.replace("_"," ")
+          const displayName = data?.replace("_", " ");
           return (
             <Chip
               label={displayName}
               sx={{ mr: 2 }}
               variant="outlined"
               color="primary"
-              onClick={()=>{console.log("DDDDDD",data)}}
+              onClick={() => {
+                console.log("DDDDDD", data);
+              }}
               onDelete={() => {
                 alert("zzzzzzz");
               }}
@@ -80,6 +86,10 @@ const Root = () => {
             handleModalOpen={handleModalOpen}
             tableList={tableList}
             setTableList={setTableList}
+            isMastarForm={isMastarForm}
+            selectedTableData={selectedTableData}
+            setSelectedTableData={setSelectedTableData}
+            handleModalClose={handleModalClose}
           />
         </div>
       </div>
@@ -91,6 +101,7 @@ const Root = () => {
           handleModalClose={handleModalClose}
           setTableList={setTableList}
           tableList={tableList}
+          selectedTableData={selectedTableData}
         />
       )}
     </div>

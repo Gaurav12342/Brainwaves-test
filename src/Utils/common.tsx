@@ -10,7 +10,7 @@ export const GENDERS: IGENDERS[] = [
   { value: "other", label: "OTHER" },
 ];
 
-export const getHeaders: any = (handleDelete:any) => ([
+export const getHeaders: any = (handleDelete:any,handleEditMasterForm:any) => ([
   { field: "id", headerName: "ID", width: 90 },
   {
     field: "companyName",
@@ -106,7 +106,7 @@ export const getHeaders: any = (handleDelete:any) => ([
       return (
         <Box>
           <Button onClick={()=>handleDelete(row)} sx={{mr:1}} size="small" variant="outlined"><DeleteIcon/></Button>
-          <Button size="small" variant="outlined"><EditIcon/></Button>
+          <Button onClick={()=>handleEditMasterForm(row)} size="small" variant="outlined"><EditIcon/></Button>
         </Box>
       );
     },

@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -10,6 +11,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
@@ -18,7 +20,8 @@ const SaveTemplateModal = ({
   onClose,
   onApply,
   isSaveModalOpen,
-  manageTemplate
+  manageTemplate,
+  handleApplyDefaultTemplate
 }: any) => {
   const [templateName, setTemplateName] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState("");
@@ -43,13 +46,24 @@ const SaveTemplateModal = ({
         fullWidth
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          Templates
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Box>
+              <Typography variant="h5" gutterBottom>
+                Templates
+              </Typography>
+            </Box>
+            <Box>
+              <Button variant="contained" onClick={handleApplyDefaultTemplate}>
+                Default
+              </Button>
+            </Box>
+          </Box>
         </DialogTitle>
 
         <DialogContent dividers>
           <div>
             <Grid container xs={12}>
-              <Grid item xs={12} sx={{ display: "flex", mb:5 }}>
+              <Grid item xs={12} sx={{ display: "flex", mb: 5 }}>
                 <Grid item xs={6}>
                   <FormControl style={{ width: "90%" }} variant="standard">
                     <TextField
@@ -69,7 +83,7 @@ const SaveTemplateModal = ({
                 </Grid>
               </Grid>
 
-              <Grid item xs={12} display={'flex'}>
+              <Grid item xs={12} display={"flex"}>
                 <Grid item xs={6}>
                   <FormControl style={{ width: "90%" }}>
                     <Select
@@ -80,7 +94,10 @@ const SaveTemplateModal = ({
                     >
                       {manageTemplate?.map((template: any) => {
                         return (
-                          <MenuItem key={template?.templateName} value={template?.templateName}>
+                          <MenuItem
+                            key={template?.templateName}
+                            value={template?.templateName}
+                          >
                             {" "}
                             {template?.templateName}
                           </MenuItem>
@@ -101,13 +118,11 @@ const SaveTemplateModal = ({
         </DialogContent>
 
         <DialogActions>
-      <Button variant="outlined" onClick={onClose}>
-        Cancel
-      </Button>
-      </DialogActions>
+          <Button variant="outlined" onClick={onClose}>
+            Cancel
+          </Button>
+        </DialogActions>
       </Dialog>
-      
-      
     </div>
   );
 };

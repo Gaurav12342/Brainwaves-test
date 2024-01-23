@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 import { Dayjs } from 'dayjs';
 
 const MasterForm = (props: any) => {
-  const { handleModalClose, isMastarForm, setTableList, tableList } = props;
+  const { handleModalClose, isMastarForm, setTableList, tableList,selectedTableData } = props;
   const [selectedTab, setSelectedTab] = React.useState(0);
   const [selectedGender, setSelectedGender] = useState('');
   const [selectedBirthDate, setSelectedBirthDate] = React.useState<Dayjs | null>(null);
@@ -37,6 +37,25 @@ const MasterForm = (props: any) => {
     }
   });
 
+  useEffect(() => {
+    if (selectedTableData) {
+      reset({
+        companyName: selectedTableData.companyName,
+        empCode: selectedTableData.empCode,
+        fName: selectedTableData.fName,
+        lName: selectedTableData.lName,
+        gender: selectedTableData.gender,
+        birthDate: selectedTableData.birthDate,
+        address1: selectedTableData.address1,
+        address2: selectedTableData.address2,
+        address3: selectedTableData.address3,
+        city: selectedTableData.city,
+        state: selectedTableData.state,
+        country: selectedTableData.country,
+      });
+    }
+  }, [selectedTableData, reset]);
+
   const handleReset = ()=>{
     reset();
     setSelectedGender('');
@@ -44,9 +63,16 @@ const MasterForm = (props: any) => {
   }
 
   const onSubmit: any = (data: any) => {
-    const obj = [...tableList];
-    obj.push({...data,id:Date.now()});
-    setTableList(obj);
+    if (selectedTableData?.id) {
+      const updatedList = tableList.map((item: any) =>
+        item.id === selectedTableData.id ? { ...item, ...data } : item
+      );
+      setTableList(updatedList);
+    } else {
+      const obj = [...tableList];
+      obj.push({ ...data, id: Date.now() });
+      setTableList(obj);
+    }
     handleModalClose();
   };
 
@@ -125,7 +151,10 @@ const MasterForm = (props: any) => {
             </>
           </DialogContent>
           <DialogActions>
-            <Button variant="outlined" onClick={handleModalClose}>
+            <Button variant="outlined" onClick={()=>{
+              handleModalClose();
+              reset();
+            }}>
               Cancel
             </Button>
 
@@ -134,7 +163,7 @@ const MasterForm = (props: any) => {
             </Button>
 
             <Button type="submit" variant="contained">
-              Save
+              {selectedTableData?.id ? "Update" : "Save"}
             </Button>
           </DialogActions>
         </form>
