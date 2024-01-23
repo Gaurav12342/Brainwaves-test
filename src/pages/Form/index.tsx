@@ -11,13 +11,21 @@ import Tab from "@mui/material/Tab";
 import ProfileTab from "./ProfileTab";
 import AddressTab from "./AddressTab";
 import { useForm } from "react-hook-form";
-import { Dayjs } from 'dayjs';
+import { Dayjs } from "dayjs";
 
 const MasterForm = (props: any) => {
-  const { handleModalClose, isMastarForm, setTableList, tableList,selectedTableData } = props;
+  const {
+    handleModalClose,
+    isMastarForm,
+    selectedTableData,
+    tableList1,
+    selectedMaster,
+    setTableList1,
+  } = props;
   const [selectedTab, setSelectedTab] = React.useState(0);
-  const [selectedGender, setSelectedGender] = useState('');
-  const [selectedBirthDate, setSelectedBirthDate] = React.useState<Dayjs | null>(null);
+  const [selectedGender, setSelectedGender] = useState("");
+  const [selectedBirthDate, setSelectedBirthDate] =
+    React.useState<Dayjs | null>(null);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
@@ -33,8 +41,8 @@ const MasterForm = (props: any) => {
     formState: { errors },
   } = useForm<any>({
     defaultValues: {
-      birthDate: ''
-    }
+      birthDate: "",
+    },
   });
 
   useEffect(() => {
@@ -56,34 +64,40 @@ const MasterForm = (props: any) => {
     }
   }, [selectedTableData, reset]);
 
-  const handleReset = ()=>{
+  const handleReset = () => {
     reset();
-    setSelectedGender('');
+    setSelectedGender("");
     setSelectedBirthDate(null);
-  }
+  };
 
   const onSubmit: any = (data: any) => {
     if (selectedTableData?.id) {
-      const updatedList = tableList.map((item: any) =>
+      const updatedList = tableList1?.masterList?.map((item: any) =>
         item.id === selectedTableData.id ? { ...item, ...data } : item
       );
-      setTableList(updatedList);
+      setTableList1({
+        selectedTransaction: selectedMaster,
+        masterList: updatedList,
+      });
     } else {
-      const obj = [...tableList];
+      const obj = [...tableList1?.masterList];
       obj.push({ ...data, id: Date.now() });
-      setTableList(obj);
+      const result = {
+        selectedTransaction: selectedMaster,
+        masterList: obj,
+      };
+      setTableList1(result);
     }
     handleModalClose();
   };
 
-  const handleNext = ()=>{
+  const handleNext = () => {
     setSelectedTab(1);
-  }
+  };
 
-  const handlePrev = ()=>{
+  const handlePrev = () => {
     setSelectedTab(0);
-  }
-
+  };
 
   return (
     <React.Fragment>
@@ -151,10 +165,13 @@ const MasterForm = (props: any) => {
             </>
           </DialogContent>
           <DialogActions>
-            <Button variant="outlined" onClick={()=>{
-              handleModalClose();
-              reset();
-            }}>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                handleModalClose();
+                reset();
+              }}
+            >
               Cancel
             </Button>
 

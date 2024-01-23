@@ -72,7 +72,11 @@ const AddressTab = (props: any) => {
             >
               Prev
             </Button>
-            <Button variant="outlined" onClick={handleNext} disabled={selectedTab === 1 && true}>
+            <Button
+              variant="outlined"
+              onClick={handleNext}
+              disabled={selectedTab === 1 && true}
+            >
               Next
             </Button>
           </Grid>

@@ -26,9 +26,8 @@ const ProfileTab = (props: any) => {
     control,
     handleNext,
     handlePrev,
-    selectedTab
+    selectedTab,
   } = props;
-  // const [value, setValue] = React.useState<Dayjs | null>(null);
 
   const handleGenderChange = (event: any) => {
     const value: any = event.target.value;
@@ -118,8 +117,21 @@ const ProfileTab = (props: any) => {
 
         <Grid container>
           <Grid item>
-            <Button variant="outlined" style={{marginRight:10}} disabled={selectedTab === 0 && true} onClick={handlePrev}>Prev</Button>
-            <Button variant="outlined" onClick={handleNext} disabled={selectedTab === 1 && true}>Next</Button>
+            <Button
+              variant="outlined"
+              style={{ marginRight: 10 }}
+              disabled={selectedTab === 0 && true}
+              onClick={handlePrev}
+            >
+              Prev
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={handleNext}
+              disabled={selectedTab === 1 && true}
+            >
+              Next
+            </Button>
           </Grid>
         </Grid>
       </Box>

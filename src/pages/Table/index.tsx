@@ -1,37 +1,53 @@
-import { DataGridPro, GridToolbar, GridOverlay,GridInitialState,GridToolbarContainer, GridToolbarFilterButton, GridToolbarDensitySelector, GridToolbarColumnsButton } from "@mui/x-data-grid-pro";
-import { useDemoData } from "@mui/x-data-grid-generator";
-import { Button, Stack, Typography } from "@mui/material";
-import { getHeaders, loadTemplatesFromLocalStorage, saveTemplateToLocalStorage } from "../../Utils/common";
-import { useEffect, useState } from "react";
+import {
+  DataGridPro,
+  GridOverlay,
+  GridToolbarContainer,
+  GridToolbarFilterButton,
+  GridToolbarDensitySelector,
+  GridToolbarColumnsButton,
+} from "@mui/x-data-grid-pro";
+import { Button, Typography } from "@mui/material";
+import { getHeaders } from "../../Utils/common";
+import { useState } from "react";
 import SaveTemplateModal from "../../Components/TemplateModal";
 import MasterForm from "../Form";
 
-const initialTemplate:any = {
-  pinnedColumns: { left: ['id'], right:['action'] },
+const initialTemplate: any = {
+  pinnedColumns: { left: ["id"], right: ["action"] },
   // hiddenColumns: ['id'],
   // columnOrder: ['companyName', 'id', 'empCode', 'fName', 'lName','gender','birthDate','address1','address2','address3','city','state','country'],
 };
 
 const MasterTable = (props: any) => {
-  const { setIsMasterForm, handleModalOpen, tableList, setTableList,selectedTableData,setSelectedTableData,isMastarForm,handleModalClose } = props;
+  const {
+    setIsMasterForm,
+    handleModalOpen,
+    selectedTableData,
+    setSelectedTableData,
+    isMastarForm,
+    handleModalClose,
+    tableList1,
+    setTableList1,
+    selectedMaster,
+  } = props;
   const [gridTemplate, setGridTemplate] = useState<any>(initialTemplate);
-  const [storedPinnedColumn,setStorePinnedColumn] = useState({});
-  
-  const [manageTemplate,setManageTemplate] = useState<any>([]);
+  const [storedPinnedColumn, setStorePinnedColumn] = useState({});
+
+  const [manageTemplate, setManageTemplate] = useState<any>([]);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [columnOrder, setColumnOrder] = useState([]);
 
-  const CustomNoRowsOverlay:any = () => {
+  const CustomNoRowsOverlay: any = () => {
     return (
       <GridOverlay>
-        <Typography variant="subtitle1" style={{ textAlign: 'center' }}>
+        <Typography variant="subtitle1" style={{ textAlign: "center" }}>
           Result not found
         </Typography>
       </GridOverlay>
     );
   };
 
- const openSaveModal = () => {
+  const openSaveModal = () => {
     setIsSaveModalOpen(true);
   };
 
@@ -39,16 +55,15 @@ const MasterTable = (props: any) => {
     setIsSaveModalOpen(false);
   };
 
-  const handleSaveTemplate = (templateName:any) => {
-    const newArray:any = [...manageTemplate];
+  const handleSaveTemplate = (templateName: any) => {
+    const newArray: any = [...manageTemplate];
     const obj = {
       templateName,
-      storedPinnedColumn
+      storedPinnedColumn,
     };
     newArray.push(obj);
     setManageTemplate(newArray);
   };
-
 
   const handleApplyTemplate = (templateName: any) => {
     manageTemplate?.map((data: any) => {
@@ -59,36 +74,42 @@ const MasterTable = (props: any) => {
   };
 
   const handleDelete = (rows: any) => {
-    const result = tableList?.filter((data: any) => data?.id !== rows?.id);
-    setTableList(result);
+    const result = tableList1?.masterList?.filter(
+      (data: any) => data?.id !== rows?.id
+    );
+    setTableList1({
+      selectedTransaction: selectedMaster,
+      masterList: result,
+    });
   };
 
-  const handleColumnModelChange = (newModel:any) => {
+  const handleColumnModelChange = (newModel: any) => {
     // setColumnOrder(newModel.map((col:any) => col.field));
   };
 
-  const handlePinnedColumnChange = (newData:any) => {
+  const handlePinnedColumnChange = (newData: any) => {
     setGridTemplate({ pinnedColumns: newData });
     setStorePinnedColumn(newData);
-  }
+  };
 
   function CustomToolbar() {
     return (
       <GridToolbarContainer>
         <GridToolbarFilterButton />
-        <GridToolbarColumnsButton/>
+        <GridToolbarColumnsButton />
       </GridToolbarContainer>
     );
   }
 
-  const handleEditMasterForm = (row:any) => {
+  const handleEditMasterForm = (row: any) => {
     setIsMasterForm(true);
     setSelectedTableData(row);
-  }
+  };
 
-  const handleApplyDefaultTemplate = ()=>{
+  const handleApplyDefaultTemplate = () => {
     setGridTemplate(initialTemplate);
-  }
+    closeSaveModal();
+  };
 
   return (
     <div style={{ marginTop: "0px" }}>
@@ -115,14 +136,17 @@ const MasterTable = (props: any) => {
       </div>
       <div>
         <DataGridPro
-          columns={getHeaders(handleDelete,handleEditMasterForm)}
-          rows={tableList}
+          columns={getHeaders(handleDelete, handleEditMasterForm)}
+          rows={
+            tableList1?.selectedTransaction === selectedMaster &&
+            tableList1?.masterList
+          }
           style={{ height: 700 }}
           components={{
             Toolbar: CustomToolbar,
             NoRowsOverlay: CustomNoRowsOverlay,
           }}
-          hideFooter={tableList.length === 0}
+          hideFooter={tableList1?.masterList === 0}
           initialState={{
             pinnedColumns: gridTemplate?.pinnedColumns,
           }}
@@ -147,9 +171,10 @@ const MasterTable = (props: any) => {
           isMastarForm={isMastarForm}
           setIsMasterForm={setIsMasterForm}
           handleModalClose={handleModalClose}
-          setTableList={setTableList}
-          tableList={tableList}
           selectedTableData={selectedTableData}
+          setTableList1={setTableList1}
+          tableList1={tableList1}
+          selectedMaster={selectedMaster}
         />
       )}
     </div>

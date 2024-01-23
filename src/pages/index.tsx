@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { DataGridPro, GridToolbar } from "@mui/x-data-grid-pro";
-import { useDemoData } from "@mui/x-data-grid-generator";
 import MasterTable from "./Table";
 import Header from "./Header";
 import MasterForm from "./Form";
 import { Chip, SelectChangeEvent } from "@mui/material";
+import NotFound from "./NotFound";
 
 const Root = () => {
   const [isMastarForm, setIsMasterForm] = useState(false);
   const [masterList, setMasterList] = useState<string[]>([]);
-  const [selectedMasterList, setSelectedMasterList] = useState<string[]>(
-    []
-  );
-  const [masterChips,setMasterChips] = useState<any>([]);
-  const [tableList,setTableList] = useState<any>([]);
-  const [selectedTableData,setSelectedTableData] = useState<any>({});
-  console.log("🚀 ~ Root ~ selectedMasterList:", selectedMasterList)
-  
+  const [selectedMasterList, setSelectedMasterList] = useState<string[]>([]);
+  const [selectedMaster, setSelectedMaster] = useState<any>({});
+  const [selectedTableData, setSelectedTableData] = useState<any>({});
+  const [tableList1, setTableList1] = useState<any>({});
+
   useEffect(() => {
     const names: any = [
       { label: "Company Master", value: "company_master" },
@@ -27,12 +23,6 @@ const Root = () => {
     setMasterList(names);
   }, []);
 
-  useEffect(()=>{
-    if(selectedMasterList?.length){
-      setMasterChips(selectedMasterList);
-    }
-  },[selectedMasterList]);
-  
   const handleChangeMaterList = (
     event: SelectChangeEvent<typeof selectedMasterList>
   ) => {
@@ -42,7 +32,7 @@ const Root = () => {
     setSelectedMasterList(typeof value === "string" ? value.split(",") : value);
   };
 
- const handleModalOpen = () => {
+  const handleModalOpen = () => {
     setIsMasterForm(true);
     setSelectedTableData({});
   };
@@ -61,37 +51,54 @@ const Root = () => {
         />
       </div>
       <div style={{ margin: "20px 0 0 20px" }}>
-        {masterChips?.map((data: any) => {
+        {selectedMasterList?.map((data: any) => {
           const displayName = data?.replace("_", " ");
           return (
             <Chip
               label={displayName}
               sx={{ mr: 2 }}
-              variant="outlined"
-              color="primary"
+              color={selectedMaster === data ? "success" : "primary"}
               onClick={() => {
-                console.log("DDDDDD", data);
+                const newObj = {
+                  selectedTransaction: data,
+                  masterList: [],
+                };
+                setTableList1(newObj);
+                setSelectedMaster(data);
               }}
               onDelete={() => {
-                alert("zzzzzzz");
+                const result = selectedMasterList?.filter(
+                  (dd: any) => dd !== data
+                );
+                setSelectedMasterList(result);
+                setSelectedMaster({});
               }}
             />
           );
         })}
       </div>
       <div style={{ height: 400, width: "100%" }}>
-        <div>
+        {!selectedMasterList?.length ? (
+          <NotFound
+            title={"Please select masters from above masters dropdown"}
+          />
+        ) : Object.keys(selectedMaster).length > 0 ? (
           <MasterTable
             setIsMasterForm={setIsMasterForm}
             handleModalOpen={handleModalOpen}
-            tableList={tableList}
-            setTableList={setTableList}
             isMastarForm={isMastarForm}
             selectedTableData={selectedTableData}
             setSelectedTableData={setSelectedTableData}
             handleModalClose={handleModalClose}
+            setTableList1={setTableList1}
+            tableList1={tableList1}
+            selectedMaster={selectedMaster}
           />
-        </div>
+        ) : (
+          <div>
+            <NotFound title={"Please select any master chip"} />
+          </div>
+        )}
       </div>
 
       {isMastarForm && (
@@ -99,9 +106,10 @@ const Root = () => {
           isMastarForm={isMastarForm}
           setIsMasterForm={setIsMasterForm}
           handleModalClose={handleModalClose}
-          setTableList={setTableList}
-          tableList={tableList}
           selectedTableData={selectedTableData}
+          setTableList1={setTableList1}
+          tableList1={tableList1}
+          selectedMaster={selectedMaster}
         />
       )}
     </div>
