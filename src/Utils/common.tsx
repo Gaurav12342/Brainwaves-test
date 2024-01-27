@@ -136,4 +136,6 @@ export const ListOfAddress = [
   { city: "New York", state: "NY", country: "USA" },
   { city: "Los Angeles", state: "CA", country: "USA" },
   { city: "Toronto", state: "ON", country: "Canada" },
+  { city: "Mumbai", state: "Maharashtra", country: "India" },
+  { city: "Ayodhya", state: "MP", country: "India" },
 ];
