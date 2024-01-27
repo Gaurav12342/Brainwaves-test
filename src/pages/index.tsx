@@ -12,7 +12,7 @@ const Root = () => {
   const [selectedMasterList, setSelectedMasterList] = useState<any>([]);
   const [selectedMaster, setSelectedMaster] = useState<any>({});
   const [selectedTableData, setSelectedTableData] = useState<any>({});
-  const [tableList1, setTableList1] = useState<any>({});
+  const [tableList1, setTableList1] = useState<any>([]);
   const [isMasterDropDownList, setIsMasterDropDownList] = useState(false);
   const [masterDropDownValue, setMasterDropDownValue] = useState("");
   
@@ -76,11 +76,6 @@ const Root = () => {
               sx={{ mr: 2 }}
               color={selectedMaster?.id === data?.id ? "success" : "primary"}
               onClick={() => {
-                const newObj = {
-                  selectedTransaction: data,
-                  masterList: [],
-                };
-                setTableList1(newObj);
                 setSelectedMaster(data);
               }}
               onDelete={() => {

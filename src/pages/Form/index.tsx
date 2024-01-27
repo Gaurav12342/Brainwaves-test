@@ -77,27 +77,44 @@ const MasterForm = (props: any) => {
     setComboBoxaValue(null);
   };
 
-  const onSubmit: any = (data: any) => {
+  const onSubmit = (data:any) => {
+    const newEntry = { ...data, id: Date.now() };
+    let updatedTableList;
+  
     if (selectedTableData?.id) {
-      const updatedList = tableList1?.masterList?.map((item: any) =>
-        item.id === selectedTableData.id ? { ...item, ...data } : item
-      );
-      setTableList1({
-        selectedTransaction: selectedMaster,
-        masterList: updatedList,
+      updatedTableList = tableList1?.map((tableItem:any) => {
+        if (tableItem.selectedTransaction.id === selectedMaster.id) {
+          const updatedMasterList = tableItem?.masterList?.map((item:any) =>
+            item.id === selectedTableData.id ? { ...item, ...data } : item
+          );
+          return { ...tableItem, masterList: updatedMasterList };
+        }
+        return tableItem;
       });
     } else {
-      const obj = [...tableList1?.masterList];
-      obj.push({ ...data, id: Date.now() });
-      const result = {
-        selectedTransaction: selectedMaster,
-        masterList: obj,
-      };
-      console.log("🚀 ~ MasterForm ~ result:", result)
+      const masterIndex = tableList1.findIndex(
+        (item:any) => item?.selectedTransaction?.id === selectedMaster?.id
+      );
+  
+      if (masterIndex !== -1) {
+        // Add to an existing masterList
+        updatedTableList = [...tableList1];
+        updatedTableList[masterIndex] = {
+          ...updatedTableList[masterIndex],
+          masterList: [...updatedTableList[masterIndex].masterList, newEntry],
+        };
+      } else {
+        // Create a new masterList for this master
+        updatedTableList = [
+          ...tableList1,
+          { selectedTransaction: selectedMaster, masterList: [newEntry] },
+        ];
+      }
     }
+  
+    setTableList1(updatedTableList);
     handleModalClose();
-  };
-
+  };  
   const handleNext = () => {
     setSelectedTab(1);
   };

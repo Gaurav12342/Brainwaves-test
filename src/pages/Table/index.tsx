@@ -31,7 +31,7 @@ const MasterTable = (props: any) => {
   } = props;
   const [gridTemplate, setGridTemplate] = useState<any>(initialTemplate);
   const [storedPinnedColumn, setStorePinnedColumn] = useState({});
-
+  
   const [manageTemplate, setManageTemplate] = useState<any>([]);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
  
@@ -73,13 +73,17 @@ const MasterTable = (props: any) => {
   };
 
   const handleDelete = (rows: any) => {
-    const result = tableList1?.masterList?.filter(
-      (data: any) => data?.id !== rows?.id
-    );
-    setTableList1({
-      selectedTransaction: selectedMaster,
-      masterList: result,
+    const updatedTableList = tableList1.map((tableItem:any) => {
+      if (tableItem.selectedTransaction.id === selectedMaster.id) {
+        const updatedMasterList = tableItem.masterList.filter(
+          (row:any) => row.id !== rows.id
+        );
+        return { ...tableItem, masterList: updatedMasterList };
+      }
+      return tableItem;
     });
+  
+    setTableList1(updatedTableList);
   };
 
   const handlePinnedColumnChange = (newData: any) => {
@@ -106,6 +110,10 @@ const MasterTable = (props: any) => {
     closeSaveModal();
   };
 
+  const existingMasterIndex = tableList1.findIndex(
+    (entry:any) => entry.selectedTransaction.id === selectedMaster.id
+  );
+  
   return (
     <div style={{ marginTop: "0px" }}>
       <div
@@ -132,16 +140,13 @@ const MasterTable = (props: any) => {
       <div>
         <DataGridPro
           columns={getHeaders(handleDelete, handleEditMasterForm)}
-          rows={
-            tableList1?.selectedTransaction === selectedMaster &&
-            tableList1?.masterList
-          }
+          rows={tableList1[existingMasterIndex]?.masterList ?? []}
           style={{ height: 700 }}
           components={{
             Toolbar: CustomToolbar,
             NoRowsOverlay: CustomNoRowsOverlay,
           }}
-          hideFooter={tableList1?.masterList === 0}
+          hideFooter={tableList1?.length === 0}
           initialState={{
             pinnedColumns: gridTemplate?.pinnedColumns,
           }}
