@@ -7,14 +7,12 @@ import {
 } from "@mui/x-data-grid-pro";
 import { Button, Typography } from "@mui/material";
 import { getHeaders } from "../../Utils/common";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import SaveTemplateModal from "../../Components/TemplateModal";
 import MasterForm from "../Form";
 
 const initialTemplate: any = {
   pinnedColumns: { left: ["id"], right: ["action"] },
-  // hiddenColumns: ['id'],
-  // columnOrder: ['companyName', 'id', 'empCode', 'fName', 'lName','gender','birthDate','address1','address2','address3','city','state','country'],
 };
 
 const MasterTable = (props: any) => {
@@ -34,6 +32,13 @@ const MasterTable = (props: any) => {
   
   const [manageTemplate, setManageTemplate] = useState<any>([]);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+  const [columnOrder, setColumnOrder] = useState([]);
+ 
+
+  useEffect(() => {
+    const getColumn = getHeaders(handleDelete, handleEditMasterForm);
+    setColumnOrder(getColumn?.map((col: any) => col.field));
+  }, []);
  
 
   const CustomNoRowsOverlay: any = () => {
@@ -59,6 +64,7 @@ const MasterTable = (props: any) => {
     const obj = {
       templateName,
       storedPinnedColumn,
+      columnOrder
     };
     newArray.push(obj);
     setManageTemplate(newArray);
@@ -68,6 +74,7 @@ const MasterTable = (props: any) => {
     manageTemplate?.map((data: any) => {
       if (data?.templateName === templateName) {
         setGridTemplate({ pinnedColumns: data?.storedPinnedColumn });
+        setColumnOrder(data?.columnOrder);
       }
     });
   };
@@ -107,13 +114,27 @@ const MasterTable = (props: any) => {
 
   const handleApplyDefaultTemplate = () => {
     setGridTemplate(initialTemplate);
+    const getColumn = getHeaders(handleDelete, handleEditMasterForm);
+    setColumnOrder(getColumn?.map((col:any) => col.field));
     closeSaveModal();
   };
 
   const existingMasterIndex = tableList1.findIndex(
     (entry:any) => entry.selectedTransaction.id === selectedMaster.id
   );
-  
+
+  const handleColumnOrderChange = ({ column, oldIndex, targetIndex }:any) => {
+    let newOrder = [...columnOrder];
+    const movedColumn = newOrder.splice(oldIndex, 1)[0];
+    newOrder.splice(targetIndex, 0, movedColumn);
+    setColumnOrder(newOrder);
+  };
+
+  const orderedColumns = useMemo(() => {
+    const unorderedColumns = getHeaders(handleDelete, handleEditMasterForm);
+    return columnOrder.map((field:any) => unorderedColumns.find((col:any) => col.field === field)).filter(Boolean);
+  }, [columnOrder, handleDelete, handleEditMasterForm]);
+
   return (
     <div style={{ marginTop: "0px" }}>
       <div
@@ -139,7 +160,7 @@ const MasterTable = (props: any) => {
       </div>
       <div>
         <DataGridPro
-          columns={getHeaders(handleDelete, handleEditMasterForm)}
+          columns={orderedColumns}
           rows={tableList1[existingMasterIndex]?.masterList ?? []}
           style={{ height: 700 }}
           components={{
@@ -150,6 +171,8 @@ const MasterTable = (props: any) => {
           initialState={{
             pinnedColumns: gridTemplate?.pinnedColumns,
           }}
+          columnOrder={columnOrder} 
+          onColumnOrderChange={handleColumnOrderChange}
           onPinnedColumnsChange={handlePinnedColumnChange}
           {...gridTemplate}
         />
