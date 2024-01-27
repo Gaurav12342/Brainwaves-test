@@ -28,6 +28,7 @@ const MasterForm = (props: any) => {
   const [selectedGender, setSelectedGender] = useState("");
   const [selectedBirthDate, setSelectedBirthDate] =
     React.useState<Dayjs | null>(null);
+  const [comboBoxaValue,setComboBoxaValue] = useState(null);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
@@ -41,6 +42,7 @@ const MasterForm = (props: any) => {
     reset,
     control,
     formState: { errors },
+    getValues
   } = useForm<any>({
     defaultValues: {
       birthDate: "",
@@ -49,6 +51,8 @@ const MasterForm = (props: any) => {
 
   useEffect(() => {
     if (selectedTableData) {
+      setSelectedGender(selectedTableData?.gender);
+      setComboBoxaValue(selectedTableData?.city);
       reset({
         companyName: selectedTableData.companyName,
         empCode: selectedTableData.empCode,
@@ -70,6 +74,7 @@ const MasterForm = (props: any) => {
     reset();
     setSelectedGender("");
     setSelectedBirthDate(null);
+    setComboBoxaValue(null);
   };
 
   const onSubmit: any = (data: any) => {
@@ -99,6 +104,13 @@ const MasterForm = (props: any) => {
 
   const handlePrev = () => {
     setSelectedTab(0);
+  };
+
+  const handleComboChange = (value:any) => {
+    setValue("city",value?.city);
+    setValue("state",value?.state);
+    setValue("country",value?.country);
+    setComboBoxaValue(value?.city);
   };
 
   return (
@@ -161,6 +173,8 @@ const MasterForm = (props: any) => {
                     handleNext={handleNext}
                     handlePrev={handlePrev}
                     selectedTab={selectedTab}
+                    handleComboChange={handleComboChange}
+                    comboBoxaValue={comboBoxaValue}
                   />
                 )}
               </div>

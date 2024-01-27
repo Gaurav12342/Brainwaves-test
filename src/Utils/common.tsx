@@ -130,3 +130,10 @@ export const loadTemplatesFromLocalStorage = () => {
     return [];
   }
 };
+
+export const ListOfAddress = [
+  { city: "City", state: "State", country: "Country", isLabel: true },
+  { city: "New York", state: "NY", country: "USA" },
+  { city: "Los Angeles", state: "CA", country: "USA" },
+  { city: "Toronto", state: "ON", country: "Canada" },
+];

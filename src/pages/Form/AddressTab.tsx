@@ -6,10 +6,10 @@ import {
   InputLabel,
   TextField,
 } from "@mui/material";
-import React from "react";
+import MultipleColumnDropDown from "../../Components/MultipleColumnDropDown";
 
 const AddressTab = (props: any) => {
-  const { register, handleNext, handlePrev, selectedTab } = props;
+  const { register, handleNext, handlePrev, selectedTab, handleComboChange,comboBoxaValue } = props;
   return (
     <div>
       <Box
@@ -44,7 +44,7 @@ const AddressTab = (props: any) => {
           <Grid item xs={4}>
             <InputLabel htmlFor="component-simple">City</InputLabel>
             <FormControl style={{ width: "90%" }} variant="standard">
-              <TextField id="fullWidth" {...register("city")} />
+              <MultipleColumnDropDown label={"city"} value={comboBoxaValue} onChange={handleComboChange} />
             </FormControl>
           </Grid>
           <Grid item xs={4}>
@@ -62,7 +62,7 @@ const AddressTab = (props: any) => {
           </Grid>
         </Grid>
 
-        <Grid container>
+       <Grid container>
           <Grid item>
             <Button
               variant="outlined"
