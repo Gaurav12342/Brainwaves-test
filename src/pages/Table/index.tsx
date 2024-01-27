@@ -13,6 +13,21 @@ import MasterForm from "../Form";
 
 const initialTemplate: any = {
   pinnedColumns: { left: ["id"], right: ["action"] },
+  visibilityColumn: {
+    id: true,
+    companyName: true,
+    empCode: true,
+    fName: true,
+    lName: true,
+    gender: true,
+    birthDate: true,
+    address1: true,
+    address2: true,
+    address3: true,
+    city: true,
+    state: true,
+    country: true,
+  },
 };
 
 const MasterTable = (props: any) => {
@@ -33,11 +48,16 @@ const MasterTable = (props: any) => {
   const [manageTemplate, setManageTemplate] = useState<any>([]);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [columnOrder, setColumnOrder] = useState([]);
- 
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState<any>({});
+  
 
   useEffect(() => {
+    // set initial value of column order
     const getColumn = getHeaders(handleDelete, handleEditMasterForm);
     setColumnOrder(getColumn?.map((col: any) => col.field));
+
+    // set initial value of column visibility
+    setColumnVisibilityModel(initialTemplate?.visibilityColumn);
   }, []);
  
 
@@ -64,7 +84,8 @@ const MasterTable = (props: any) => {
     const obj = {
       templateName,
       storedPinnedColumn,
-      columnOrder
+      columnOrder,
+      columnVisibilityModel
     };
     newArray.push(obj);
     setManageTemplate(newArray);
@@ -75,6 +96,7 @@ const MasterTable = (props: any) => {
       if (data?.templateName === templateName) {
         setGridTemplate({ pinnedColumns: data?.storedPinnedColumn });
         setColumnOrder(data?.columnOrder);
+        setColumnVisibilityModel(data?.columnVisibilityModel);
       }
     });
   };
@@ -116,6 +138,8 @@ const MasterTable = (props: any) => {
     setGridTemplate(initialTemplate);
     const getColumn = getHeaders(handleDelete, handleEditMasterForm);
     setColumnOrder(getColumn?.map((col:any) => col.field));
+
+    setColumnVisibilityModel(initialTemplate?.visibilityColumn);
     closeSaveModal();
   };
 
@@ -174,6 +198,11 @@ const MasterTable = (props: any) => {
           columnOrder={columnOrder} 
           onColumnOrderChange={handleColumnOrderChange}
           onPinnedColumnsChange={handlePinnedColumnChange}
+
+          columnVisibilityModel={columnVisibilityModel}
+          onColumnVisibilityModelChange={(newModel) =>
+            setColumnVisibilityModel(newModel)
+          }
           {...gridTemplate}
         />
       </div>
