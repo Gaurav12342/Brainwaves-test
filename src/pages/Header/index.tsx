@@ -44,9 +44,8 @@ const Header = (props: any) => {
             <Select
               labelId="demo-multiple-name-label"
               id="demo-multiple-name"
-              multiple
               placeholder="Master1"
-              value={selectedMasterList}
+              value={"Masters"}
               onChange={handleChangeMaterList}
               MenuProps={MenuProps}
               sx={{ background: "#ffffff", color: "#000000" }}

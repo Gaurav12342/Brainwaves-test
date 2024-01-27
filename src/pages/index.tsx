@@ -9,7 +9,7 @@ import MaterDropdownModal from "../Components/MaterDropdownModal";
 const Root = () => {
   const [isMastarForm, setIsMasterForm] = useState(false);
   const [masterDropDownList, setMasterDropDownList] = useState<string[]>([]);
-  const [selectedMasterList, setSelectedMasterList] = useState<string[]>([]);
+  const [selectedMasterList, setSelectedMasterList] = useState<any>([]);
   const [selectedMaster, setSelectedMaster] = useState<any>({});
   const [selectedTableData, setSelectedTableData] = useState<any>({});
   const [tableList1, setTableList1] = useState<any>({});
@@ -27,12 +27,14 @@ const Root = () => {
   }, []);
 
   const handleChangeMaterList = (
-    event: SelectChangeEvent<typeof selectedMasterList>
+    event: any
   ) => {
-    const {
-      target: { value },
-    } = event;
-    setSelectedMasterList(typeof value === "string" ? value.split(",") : value);
+    const value = event.target.value;
+    const newSelection = {
+      id: Math.random(),
+      value: value,
+    };
+    setSelectedMasterList([...selectedMasterList, newSelection]);
   };
 
   const handleModalOpen = () => {
@@ -67,12 +69,12 @@ const Root = () => {
       </div>
       <div style={{ margin: "20px 0 0 20px" }}>
         {selectedMasterList?.map((data: any) => {
-          const displayName = data?.replace("_", " ");
           return (
             <Chip
-              label={displayName}
+              key={data?.id}
+              label={data?.value?.replace("_", " ")}
               sx={{ mr: 2 }}
-              color={selectedMaster === data ? "success" : "primary"}
+              color={selectedMaster?.id === data?.id ? "success" : "primary"}
               onClick={() => {
                 const newObj = {
                   selectedTransaction: data,
@@ -83,10 +85,9 @@ const Root = () => {
               }}
               onDelete={() => {
                 const result = selectedMasterList?.filter(
-                  (dd: any) => dd !== data
+                  (dd: any) => dd?.id !== data?.id
                 );
                 setSelectedMasterList(result);
-                setSelectedMaster({});
               }}
             />
           );

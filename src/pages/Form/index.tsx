@@ -93,7 +93,7 @@ const MasterForm = (props: any) => {
         selectedTransaction: selectedMaster,
         masterList: obj,
       };
-      setTableList1(result);
+      console.log("🚀 ~ MasterForm ~ result:", result)
     }
     handleModalClose();
   };
